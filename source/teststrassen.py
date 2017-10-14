@@ -47,24 +47,14 @@ def subtract(A, B):
             C[i][j] = A[i][j] - B[i][j]
     return C
 
-
-def strassenSeuil(A, B):
-    n = len(A)
-    seuil = 10
-    if n <= seuil:
-        return conv(A, B)
-    else:
-        strassen(A, B)
-
-
-def strassen(A, B):
+def strassen(A, B, seuil=2):
     """
         Implementation of the strassen algorithm.
     """
     n = len(A)
     newSize = n//2
 
-    if n <= 1:
+    if n <= seuil:
         return conv(A, B)
     else:
         # initializing the new sub-matrices
@@ -98,27 +88,27 @@ def strassen(A, B):
         # Calculating p1 to p7:
         aResult = add(a11, a22)
         bResult = add(b11, b22)
-        p1 = strassen(aResult, bResult) # p1 = (a11+a22) * (b11+b22)
+        p1 = strassen(aResult, bResult, seuil) # p1 = (a11+a22) * (b11+b22)
 
         aResult = add(a21, a22)      # a21 + a22
-        p2 = strassen(aResult, b11)  # p2 = (a21+a22) * (b11)
+        p2 = strassen(aResult, b11,seuil)  # p2 = (a21+a22) * (b11)
 
         bResult = subtract(b12, b22) # b12 - b22
-        p3 = strassen(a11, bResult)  # p3 = (a11) * (b12 - b22)
+        p3 = strassen(a11, bResult, seuil)  # p3 = (a11) * (b12 - b22)
 
         bResult = subtract(b21, b11) # b21 - b11
-        p4 =strassen(a22, bResult)   # p4 = (a22) * (b21 - b11)
+        p4 =strassen(a22, bResult, seuil)   # p4 = (a22) * (b21 - b11)
 
         aResult = add(a11, a12)      # a11 + a12
-        p5 = strassen(aResult, b22)  # p5 = (a11+a12) * (b22)
+        p5 = strassen(aResult, b22, seuil)  # p5 = (a11+a12) * (b22)
 
         aResult = subtract(a21, a11) # a21 - a11
         bResult = add(b11, b12)      # b11 + b12
-        p6 = strassen(aResult, bResult) # p6 = (a21-a11) * (b11+b12)
+        p6 = strassen(aResult, bResult, seuil) # p6 = (a21-a11) * (b11+b12)
 
         aResult = subtract(a12, a22) # a12 - a22
         bResult = add(b21, b22)      # b21 + b22
-        p7 = strassen(aResult, bResult) # p7 = (a12-a22) * (b21+b22)
+        p7 = strassen(aResult, bResult, seuil) # p7 = (a12-a22) * (b21+b22)
 
         # calculating c21, c21, c11 e c22:
         c12 = add(p3, p5) # c12 = p3 + p5
@@ -169,22 +159,22 @@ if __name__ == "__main__":
 
     start = 0
     end = 0
+    seuil = 32
     if args.algo == 'strassen':
         start = time.time()
         C = strassen(A, B)
         end = time.time()
         
     elif args.algo == 'strassenSeuil':
+        
         start = time.time()
-        C = strassenSeuil(A, B)
+        C = strassen(A, B, seuil)
         end = time.time()
-        # printMatrix(C)
 
     elif args.algo == 'conv':
         start = time.time()
         C = conv(A, B)
         end = time.time()
-        # printMatrix(C)
     else:
     	print ("argument de l'option -a invalides")
     
