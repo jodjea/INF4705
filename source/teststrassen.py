@@ -47,7 +47,7 @@ def subtract(A, B):
             C[i][j] = A[i][j] - B[i][j]
     return C
 
-def strassen(A, B, seuil=2):
+def strassen(A, B, seuil=1):
     """
         Implementation of the strassen algorithm.
     """
